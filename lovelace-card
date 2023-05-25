@@ -1,0 +1,322 @@
+type: vertical-stack
+cards:
+  - type: picture-elements
+    theme: transparentblue
+    image: /local/images/2008.png
+    elements:
+      - type: state-label
+        entity: sensor.2008_mileage
+        prefix: 'Tot: '
+        tap_action:
+          action: more-info
+        state_color: true
+        style:
+          top: 10%
+          left: 70%
+          transform: scale(1.7)
+          font-size: 10px
+          line-height: 1px
+          padding: 5px 2px
+      - type: state-label
+        entity: sensor.2008_luminosita
+        icon: mdi:light-flood-down
+        prefix: 'Luminosita: '
+        tap_action:
+          action: more-info
+        state_color: true
+        style:
+          top: 0%
+          left: 70%
+          transform: scale(1.7)
+          font-size: 10px
+          line-height: 1px
+          padding: 5px 2px
+      - type: state-label
+        entity: sensor.2008_temp_esterna
+        icon: mdi:car-door
+        prefix: 'Temp Ext: '
+        tap_action:
+          action: more-info
+        state_color: true
+        style:
+          top: 0%
+          left: 5%
+          transform: scale(1.7)
+          font-size: 10px
+          line-height: 1px
+          padding: 5px 2px
+      - type: state-icon
+        entity: sensor.2008_finestrino_adx
+        icon: mdi:car-door
+        tap_action:
+          action: more-info
+        state_color: true
+        style:
+          top: 80%
+          left: 14%
+          transform: scale(1.3)
+          font-size: 10px
+          line-height: 1px
+          padding: 5px 2px
+      - type: state-icon
+        entity: sensor.2008_finestrino_pdx
+        icon: mdi:car-door
+        tap_action:
+          action: more-info
+        state_color: true
+        style:
+          top: 80%
+          left: 4%
+          transform: scale(1.3)
+          font-size: 10px
+          line-height: 1px
+          padding: 5px 2px
+      - type: state-icon
+        entity: sensor.2008_finestrino_asx
+        icon: mdi:car-door
+        tap_action:
+          action: more-info
+        state_color: true
+        style:
+          top: 80%
+          left: 86%
+          transform: scale(1.3)
+          font-size: 10px
+          line-height: 1px
+          padding: 5px 2px
+      - type: state-icon
+        entity: sensor.2008_lock
+        icon: mdi:car-door
+        tap_action:
+          action: more-info
+        state_color: true
+        style:
+          top: 20%
+          left: 10%
+          transform: scale(1.3)
+          font-size: 10px
+          line-height: 1px
+          padding: 5px 2px
+      - type: state-icon
+        entity: sensor.2008_finestrino_psx
+        icon: mdi:car-door
+        tap_action:
+          action: more-info
+        state_color: true
+        style:
+          top: 80%
+          left: 76%
+          transform: scale(1.3)
+          font-size: 10px
+          line-height: 1px
+          padding: 5px 2px
+  - type: custom:restriction-card
+    restrictions:
+      pin:
+        code: 1234
+    card:
+      type: custom:mushroom-lock-card
+      entity: sensor.2008_lock
+      name: Chiusura Centralizzata
+      icon: mdi:car-door-lock
+      fill_container: true
+      secondary_info: last-changed
+      tap_action:
+        action: toggle
+      hold_action:
+        action: more-info
+      double_tap_action:
+        action: none
+  - type: horizontal-stack
+    cards:
+      - type: custom:mushroom-entity-card
+        entity: sensor.2008_finestrino_asx
+        name: Ant SX
+        layout: vertical
+        fill_container: true
+        tap_action:
+          action: none
+        icon: mdi:car-door
+      - type: custom:mushroom-entity-card
+        entity: sensor.2008_finestrino_adx
+        name: Ant DX
+        layout: vertical
+        fill_container: true
+        tap_action:
+          action: none
+        icon: mdi:car-door
+      - type: custom:mushroom-entity-card
+        entity: sensor.2008_finestrino_tetto
+        layout: vertical
+        fill_container: true
+        tap_action:
+          action: none
+        name: Tetto
+      - type: custom:mushroom-entity-card
+        name: Motore
+        layout: vertical
+        fill_container: true
+        tap_action:
+          action: none
+        entity: sensor.2008_motore
+        icon: mdi:engine
+        icon_color: black
+        icon_type: icon
+  - type: horizontal-stack
+    cards:
+      - type: custom:mushroom-entity-card
+        entity: sensor.2008_finestrino_psx
+        name: Post SX
+        layout: vertical
+        fill_container: true
+        tap_action:
+          action: none
+        icon: mdi:car-door
+      - type: custom:mushroom-entity-card
+        entity: sensor.2008_finestrino_pdx
+        name: Post Dx
+        layout: vertical
+        fill_container: true
+        tap_action:
+          action: none
+        icon: mdi:car-door
+      - type: custom:mushroom-entity-card
+        name: Bagagliaio
+        layout: vertical
+        fill_container: true
+        tap_action:
+          action: none
+        entity: sensor.2008_finestrino_bagagliaio
+        icon: mdi:car-windshield-outline
+        icon_color: black
+        primary_info: none
+        secondary_info: name
+        hold_action:
+          action: none
+        double_tap_action:
+          action: none
+      - type: custom:mushroom-entity-card
+        layout: vertical
+        fill_container: true
+        tap_action:
+          action: none
+        hold_action:
+          action: none
+        double_tap_action:
+          action: none
+        entity: sensor.2008_benzina_riserva
+        name: Benzina
+        icon: mdi:gas-station
+        primary_info: name
+        secondary_info: none
+        icon_color: orange
+  - type: custom:bar-card
+    entities:
+      - entity: sensor.2008_benzina
+        name: Benzina
+        animation:
+          state: 'on'
+          speed: '2'
+        icon: mdi:car-battery
+        color: '#161616'
+        severity:
+          - from: '25'
+            to: '100'
+            color: '#006600'
+          - from: '15'
+            to: '25'
+            color: '#c1c100'
+          - from: '0'
+            to: '15'
+            color: '#660000'
+      - entity: sensor.2008_benzina_l
+        min: '0'
+        animation:
+          state: 'on'
+        icon: mdi:fuel
+        color: '#212121'
+        name: Carburante
+        complementary: false
+        severity:
+          - from: '0'
+            to: '4'
+            color: red
+          - from: '5'
+            to: '15'
+            color: orange
+          - from: '15'
+            to: '44'
+            color: green
+        max: '44'
+      - entity: sensor.2008_battery_autonomy
+        name: Autonomia
+        max: '720'
+        min: '0'
+        severity:
+          - from: '0'
+            to: '50'
+            color: red
+          - from: '51'
+            to: '150'
+            color: orange
+          - from: '151'
+            to: '720'
+            color: green
+    positions:
+      icon: inside
+      minmax: inside
+    style: |-
+      bar-card-iconbar {
+        padding-left: 35px;
+      }
+      bar-card-value {
+        padding-left: 1.5em;
+      }
+      bar-card-min {
+        position: absolute;
+        padding-left: 6px;
+      }
+      bar-card-max {
+        position: absolute;
+        padding-left: 91%;
+      }
+      bar-card-divider {
+        display: none;
+      }
+      bar-card-currentbar, bar-card-backgroundbar {
+        border-radius: 8px;
+      }
+    animation:
+      speed: '5'
+  - type: custom:mini-graph-card
+    name: Ciclo Consumi
+    align_icon: left
+    hours_to_show: 168
+    points_per_hour: 1
+    upper_bound: 100
+    lower_bound: 0
+    entities:
+      - entity: sensor.2008_benzina_l
+    show:
+      labels: true
+      animate: true
+    color_thresholds:
+      - value: 20
+        color: '#00ff00'
+      - value: 10
+        color: '#ff0000'
+  - type: custom:button-card
+    entity: sensor.2008_battery_autonomy
+    secondary_info: last-changed
+    show_last_changed: true
+    name: 'Ultimo Aggiornamento:'
+    styles:
+      grid:
+        - grid-template-areas: '"i n l"'
+        - grid-template-rows: 100%
+        - grid-template-columns: 15% 58% 27%
+      label:
+        - justify-self: start
+      name:
+        - justify-self: end
+        - margin-right: 40%
