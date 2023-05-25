@@ -1,0 +1,194 @@
+homeassistant:
+# 2008 communication
+switch:
+  - platform: command_line
+    switches:
+      2008_change_charge_threshold:
+        command_on: curl -s "http://192.168.1.103:5000/charge_control?vin=VR3USHNSKMJ530338&percentage=80"
+        command_off: curl -s "http://192.168.1.103:5000/charge_control?vin=VR3USHNSKMJ530338&percentage=100"
+      2008_change_charge_hour:
+        command_on: curl -s "http://192.168.1.103:5000/charge_control?vin=VR3USHNSKMJ530338&hour=5&minute=0"
+        command_off: curl -s "http://192.168.1.103:5000/charge_control?vin=VR3USHNSKMJ530338&hour=0&minute=0"
+      2008_clim:
+        command_on: curl -s "http://192.168.1.103:5000/preconditioning/VR3USHNSKMJ530338/1"
+        command_off: curl -s "http://192.168.1.103:5000/preconditioning/VR3USHNSKMJ530338/0"
+       
+# 2008 WakeUp
+rest_command:
+  2008_wakeup:
+    url: "http://192.168.1.103:5000/wakeup/VR3USHNSKMJ530338"
+# Peugeot 2008  
+sensor:
+  - platform: rest
+    name: peugeot_2008
+    resource: http://192.168.1.103:5000/get_vehicleinfo/VR3USHNSKMJ530338?from_cache=1
+    scan_interval: 60
+    timeout: 30
+    value_template: 'OK'
+    json_attributes:
+     - energy
+     - timed_odometer
+     - battery
+     - doors_state
+     - last_position
+     - safety
+     - air
+     - luminosity
+     - ignition
+     - kinetic
+     - properties
+     - preconditionning
+     - autonomy
+     - consumption
+     - environment
+     - vehicle
+     - privacy
+     - service
+     - oil
+     - oil_temperature
+     
+     
+  - platform: template
+    sensors:
+      2008_motore:
+        friendly_name: "motore"
+        #unit_of_measurement: "V"
+        value_template: '{{ states.sensor.peugeot_2008.attributes["ignition"]["type"] }}'
+      2008_luminosita:
+        friendly_name: "luminosita"
+        #unit_of_measurement: "V"
+        value_template: '{{ states.sensor.peugeot_2008.attributes["environment"]["luminosity"]["day"] }}'
+      2008_temp_esterna:
+        friendly_name: "temperatura esterna"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        value_template: '{{ states.sensor.peugeot_2008.attributes["environment"]["air"]["temp"] }}'
+        
+        
+      2008_finestrino_bagagliaio:
+        friendly_name: "bagagliaio"
+        #unit_of_measurement: "V"
+        value_template: '{{ states.sensor.peugeot_2008.attributes["doors_state"]["opening"][0]["state"] }}'
+        
+        
+      2008_finestrino_asx:
+        friendly_name: "Finestrino ASX"
+        #unit_of_measurement: "V"
+        value_template: '{{ states.sensor.peugeot_2008.attributes["doors_state"]["opening"][1]["state"] }}'
+      2008_finestrino_pdx:
+        friendly_name: "Finestrino PDX"
+        #unit_of_measurement: "V"
+        value_template: '{{ states.sensor.peugeot_2008.attributes["doors_state"]["opening"][2]["state"] }}'
+      2008_finestrino_psx:
+        friendly_name: "Finestrino PSX"
+        #unit_of_measurement: "V"
+        value_template: '{{ states.sensor.peugeot_2008.attributes["doors_state"]["opening"][3]["state"] }}'
+      2008_finestrino_adx:
+        friendly_name: "Finestrino ADX"
+        #unit_of_measurement: "V"
+        value_template: '{{ states.sensor.peugeot_2008.attributes["doors_state"]["opening"][4]["state"] }}'
+      2008_tetto:
+        friendly_name: "Tetto"
+        #unit_of_measurement: "V" 
+        value_template: '{{ states.sensor.peugeot_2008.attributes["doors_state"]["opening"][5]["state"] }}'
+      2008_finestrino_tetto:
+        friendly_name: "tetto"
+        #unit_of_measurement: "V"
+        value_template: '{{ states.sensor.peugeot_2008.attributes["doors_state"]["opening"][6]["state"] }}'
+      2008_lock:
+        friendly_name: "blocco porte"
+        value_template: '{{ states.sensor.peugeot_2008.attributes["doors_state"]["locked_state"]}}'
+      2008_battery_voltage:
+        friendly_name: "Battery Voltage"
+        unit_of_measurement: "V"
+        value_template: '{{ states.sensor.peugeot_2008.attributes["battery"]["voltage"] /7 | float(0) | round(1)}}'
+        device_class: voltage
+      2008_benzina:
+        friendly_name: "Livello Carburante"
+        unit_of_measurement: "%"
+        value_template: '{{ states.sensor.peugeot_2008.attributes["energy"][0]["level"] }}'
+      2008_benzina_l:
+        friendly_name: "Litri Carburante"
+        unit_of_measurement: "L"
+        value_template: '{% set litribenzina = states.sensor.peugeot_2008.attributes["energy"][0]["level"]  | float(0) %}
+                        {{ (litribenzina * 44/100 ) | round(2) }}'
+      2008_benzina_riserva:
+        friendly_name: "benzina riserva"
+        value_template: ' {% if states("sensor.2008_benzina_l") | int(0) > 4 %} off
+                          {% else %} on
+                          {% endif %}' 
+      2008_battery_autonomy:
+        friendly_name: "Autonomia Carburante"
+        unit_of_measurement: "km"
+        value_template: '{{ states.sensor.peugeot_2008.attributes["energy"][0]["autonomy"] }}'
+        device_class: distance
+      2008_charging_status:
+        friendly_name: "Charging Status"
+        value_template: '{{ states.sensor.peugeot_2008.attributes["energy"][0]["charging"]["status"] }}'
+      2008_mileage:
+        friendly_name: "Km Totali"
+        unit_of_measurement: "km"
+        value_template: '{{ states.sensor.peugeot_2008.attributes["timed_odometer"]["mileage"] }}'
+        device_class: distance
+       # Uncomment for miles instead of km
+      2008_mileage_m:
+        friendly_name: "Miglia Totali"
+        unit_of_measurement: "m"
+        value_template: "{{ ((state_attr('sensor.peugeot_2008', 'timed_odometer')['mileage']) / 1.609) | round(2)}}"
+# Peugeot 2008 charge_control
+  - platform: rest
+    name: peugeot_2008_charge_control
+    resource: http://192.168.1.103:5000/charge_control?vin=VR3USHNSKMJ530338&?always_check=true
+    scan_interval: 2
+    timeout: 30
+    value_template: 'OK'
+    json_attributes:
+     - _next_stop_hour
+     - percentage_threshold
+     - wakeup_timeout
+     - vin
+  - platform: template
+    sensors:
+      2008_stop_hour:
+        friendly_name: "Next Stop Time"
+        value_template: '{{ states.sensor.peugeot_2008_charge_control.attributes["_next_stop_hour"]}}'
+      2008_threshold:
+        friendly_name: "Threshold"
+        unit_of_measurement: "%"
+        value_template: '{{ states.sensor.peugeot_2008_charge_control.attributes["percentage_threshold"] }}'
+automation:
+   - id: '1617352487'
+     alias: WakeUp 2008
+     description: ''
+     trigger:
+     - platform: time
+       at: '6:00:00'
+     condition: []
+     action:
+     - service: rest_command.2008_wakeup
+     mode: single
+   - id: '1617352488'
+     alias: Change charging threshold 2008
+     description: ''
+     trigger:
+     - platform: state
+       entity_id:
+       - input_button.2008_apply_charge_threshold_button
+     condition: []
+     action:
+     - service: rest_command.2008_change_charge_threshold
+       data: {}
+     mode: single
+input_number:
+  2008_charge_threshold_slider:
+    name: Charging threshold
+    initial: 80
+    min: 50
+    max: 100
+    step: 1
+    unit_of_measurement: "%"
+
+input_button:
+  2008_apply_charge_threshold_button:
+    name: Set charging threshold
+    icon: mdi:battery-charging
